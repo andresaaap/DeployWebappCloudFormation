@@ -1,0 +1,15 @@
+{
+  "name": "deploy-a-high-availability",
+  "version": "1.0.0",
+  "description": "Udacity beta project deploy-a high-availability, Cloud DevOps Nanodegree",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Cloud-DevOps",
+    "Udacity"
+  ],
+  "author": "Alvaro Andres Pinzon Cortes",
+  "license": "ISC"
+}
