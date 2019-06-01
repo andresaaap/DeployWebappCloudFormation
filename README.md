@@ -1,4 +1,4 @@
-![Cloud formation background](https://aws.amazon.com/cloudformation/)
+![Cloud formation background](https://d1.awsstatic.com/photoheaders/Photo-Header_CloudFormation.901670122179f23c00953e3c71de055cbd5308ad.png)
 
 ### About this project
 
