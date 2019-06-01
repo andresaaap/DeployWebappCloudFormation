@@ -252,7 +252,11 @@ Resources:
                     systemctl enable httpd
                     wget -P ../../var/www/html https://s3.us-east-2.amazonaws.com/test-udagram-1/index.html
             ImageId: ami-0ebbf2179e615c338
-            InstanceType: "t2.micro"
+            InstanceType: "t3.small"
+            BlockDeviceMappings:
+                - DeviceName: "/dev/sdk"
+                  Ebs:
+                    VolumeSize: '10'
             SecurityGroups: 
                 - Ref: WebServerSecurityGroup
             AssociatePublicIpAddress: false
