@@ -41,4 +41,6 @@ $ ./update.sh deployhighpinzon network.yml network-parameters.json
 
 To open the website you need the URL of the Load Balancer
 
+http://elasticloadbalancer-2059187917.us-east-2.elb.amazonaws.com/
+
 [Link to the website](http://elasticloadbalancer-2059187917.us-east-2.elb.amazonaws.com/)
