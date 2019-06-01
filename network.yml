@@ -207,3 +207,113 @@ Resources:
         Properties: 
             RouteTableId: !Ref TablePublicSubnet2
             SubnetId: !Ref PublicSubnet2
+
+    ELBSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to elastic load balancer
+            VpcId: !Ref VPC
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+            SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+
+    WebServerSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Allow http to our host and ssh only locally
+            VpcId: !Ref VPC
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: 0.0.0.0/0
+
+    WebAppLaunchConfig: 
+        Type: AWS::AutoScaling::LaunchConfiguration
+        Properties: 
+            KeyName: andrespair
+            UserData: 
+                Fn::Base64: !Sub |
+                    #!/bin/bash
+                    yum update -y
+                    yum install -y httpd
+                    systemctl start httpd
+                    systemctl enable httpd
+                    wget -P ../../var/www/html https://s3.us-east-2.amazonaws.com/test-udagram-1/index.html
+            ImageId: ami-0ebbf2179e615c338
+            InstanceType: "t2.micro"
+            SecurityGroups: 
+                - Ref: WebServerSecurityGroup
+            AssociatePublicIpAddress: false
+            LaunchConfigurationName: WebAppLaunchConfig
+
+    ElasticLoadBalancer:
+        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+        Properties: 
+            IpAddressType: ipv4
+            Name: ElasticLoadBalancer
+            Scheme: internet-facing
+            SecurityGroups: 
+                - Ref: ELBSecurityGroup
+            Subnets: 
+                - !Ref PublicSubnet1
+                - !Ref PublicSubnet2
+            Tags: 
+                - Key: Name
+                  Value: !Sub ${EnvironmentName} elastic load balancer
+            Type: application
+
+    TargetGroup:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+            HealthCheckEnabled: true
+            Name: TargetGroup
+            VpcId: !Ref VPC
+            Port: 80
+            Protocol: HTTP
+
+    Listener:
+        Type: "AWS::ElasticLoadBalancingV2::Listener"
+        Properties:
+            DefaultActions:
+                - Type: forward
+                  TargetGroupArn: !Ref TargetGroup
+            LoadBalancerArn: !Ref ElasticLoadBalancer
+            Port: 80
+            Protocol: "HTTP"
+
+    ListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties: 
+            Actions: 
+                - Type: forward
+                  TargetGroupArn: !Ref TargetGroup
+            Conditions: 
+                - Field: path-pattern
+                  Values: [/]
+            ListenerArn: !Ref Listener
+            Priority: 1
+
+
+    WebAutoScalingGroup: 
+        Type: AWS::AutoScaling::AutoScalingGroup
+        Properties: 
+            VPCZoneIdentifier:
+                - !Ref PrivateSubnet1
+                - !Ref PrivateSubnet2
+            LaunchConfigurationName: !Ref WebAppLaunchConfig
+            MinSize: "4"
+            MaxSize: "4"
+            TargetGroupARNs:
+                - !Ref TargetGroup
