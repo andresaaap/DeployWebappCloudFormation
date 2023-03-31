@@ -251,7 +251,7 @@ Resources:
                     systemctl start httpd
                     systemctl enable httpd
                     cd /var/www/html
-                    echo "it works! Udagram, Udacity" > index. htmI
+                    echo "it works! Udagram, Udacity" > index.html
             ImageId: ami-02f97949d306b597a
             InstanceType: "t3.small"
             BlockDeviceMappings:
