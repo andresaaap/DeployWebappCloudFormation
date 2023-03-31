@@ -327,6 +327,8 @@ Resources:
 Outputs:
     ElasticLoadBalancerDNS:
         Description: ElasticLoadBalancer DNS
-        Value: !GetAtt ElasticLoadBalancer.DNSName
+        # join the dns name with http://
+        Value: !Sub http://${ElasticLoadBalancer.DNSName}
+        #Value: !GetAtt ElasticLoadBalancer.DNSName
 
     
