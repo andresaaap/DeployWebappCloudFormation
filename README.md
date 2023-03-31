@@ -2,7 +2,7 @@
 
 ### About this project
 
-This project deploys the cloud infraestructure and a basic website on AWS, using AWS Cloud Formation
+This project deploys the cloud infraestructure and a basic website on AWS, using AWS Cloud Formation. I am using the amazon linux instance
 
 ### Prerequisites
 
