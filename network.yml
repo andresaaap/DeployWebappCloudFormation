@@ -250,6 +250,8 @@ Resources:
                     yum install -y httpd
                     systemctl start httpd
                     systemctl enable httpd
+                    cd /var/www/html
+                    echo "it works! Udagram, Udacity" > index. htmI
             ImageId: ami-02f97949d306b597a
             InstanceType: "t3.small"
             BlockDeviceMappings:
