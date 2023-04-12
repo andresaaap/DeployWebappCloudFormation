@@ -252,7 +252,7 @@ Resources:
                     systemctl enable httpd
                     cd /var/www/html
                     echo "it works! Udagram, Udacity" > index.html
-            ImageId: ami-02f97949d306b597a
+            ImageId: ami-0103f211a154d64a6
             InstanceType: "t3.small"
             BlockDeviceMappings:
                 - DeviceName: "/dev/sdk"
