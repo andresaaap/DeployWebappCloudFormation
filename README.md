@@ -4,6 +4,10 @@
 
 This project deploys the cloud infraestructure and a basic website on AWS, using AWS Cloud Formation. I am using the amazon linux instance
 
+### Project infor
+- EC2 Amazon Linux instance
+- Region us-east-2
+
 ### Prerequisites
 
 - You need to create an account in AWS
@@ -41,6 +45,4 @@ $ ./update.sh deployhighpinzon network.yml network-parameters.json
 
 To open the website you need the URL of the Load Balancer
 
-http://elasticloadbalancer-2059187917.us-east-2.elb.amazonaws.com/
-
-[Link to the website](http://elasticloadbalancer-2059187917.us-east-2.elb.amazonaws.com/)
+http://elasticloadbalancer-1337437536.us-east-2.elb.amazonaws.com/
