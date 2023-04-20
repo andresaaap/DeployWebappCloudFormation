@@ -262,8 +262,6 @@ Resources:
                         VolumeSize: '10'
                 SecurityGroups: 
                     - Ref: WebServerSecurityGroup
-                AssociatePublicIpAddress: false
-                LaunchConfigurationName: WebAppLaunchConfig
 
     ElasticLoadBalancer:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -319,7 +317,9 @@ Resources:
             VPCZoneIdentifier:
                 - !Ref PrivateSubnet1
                 - !Ref PrivateSubnet2
-            LaunchConfigurationName: !Ref WebAppLaunchConfig
+            LaunchTemplate: 
+                LaunchTemplateName: WebAppLaunchConfig
+                Version: !GetAtt WebAppLaunchConfig.LatestVersionNumber
             MinSize: "4"
             MaxSize: "4"
             TargetGroupARNs:
