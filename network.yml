@@ -238,11 +238,13 @@ Resources:
                   FromPort: 22
                   ToPort: 22
                   CidrIp: 0.0.0.0/0
-
-    WebAppLaunchConfig: 
-        Type: AWS::AutoScaling::LaunchConfiguration
-        Properties: 
-            UserData: 
+    
+    WebAppLaunchConfig:
+        Type: AWS::EC2::LaunchTemplate
+        Properties:
+            LaunchTemplateName: WebAppLaunchConfig
+            LaunchTemplateData:
+                UserData: 
                 Fn::Base64: !Sub |
                     #!/bin/bash -xe
                     exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
@@ -252,16 +254,16 @@ Resources:
                     systemctl enable httpd
                     cd /var/www/html
                     echo "it works! Udagram, Udacity" > index.html
-            ImageId: ami-0103f211a154d64a6
-            InstanceType: "t3.small"
-            BlockDeviceMappings:
-                - DeviceName: "/dev/sdk"
-                  Ebs:
-                    VolumeSize: '10'
-            SecurityGroups: 
-                - Ref: WebServerSecurityGroup
-            AssociatePublicIpAddress: false
-            LaunchConfigurationName: WebAppLaunchConfig
+                ImageId: ami-0103f211a154d64a6
+                InstanceType: "t3.small"
+                BlockDeviceMappings:
+                    - DeviceName: "/dev/sdk"
+                    Ebs:
+                        VolumeSize: '10'
+                SecurityGroups: 
+                    - Ref: WebServerSecurityGroup
+                AssociatePublicIpAddress: false
+                LaunchConfigurationName: WebAppLaunchConfig
 
     ElasticLoadBalancer:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
