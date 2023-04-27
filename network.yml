@@ -260,8 +260,8 @@ Resources:
                     - DeviceName: "/dev/sdk"
                       Ebs:
                         VolumeSize: '10'
-                SecurityGroups: 
-                    - Ref: WebServerSecurityGroup
+                SecurityGroupIds: !GetAtt WebServerSecurityGroup.GroupId
+    
 
     ElasticLoadBalancer:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
