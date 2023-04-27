@@ -239,11 +239,17 @@ Resources:
                   ToPort: 22
                   CidrIp: 0.0.0.0/0
     
-    WebAppLaunchConfig:
+    # create LaunchTemplate resource that uses the security group WebServerSecurityGroup
+
+    LaunchTemplate:
         Type: AWS::EC2::LaunchTemplate
         Properties:
             LaunchTemplateName: WebAppLaunchConfig
             LaunchTemplateData:
+                ImageId: ami-0103f211a154d64a6
+                InstanceType: "t3.small"
+                SecurityGroupIds:
+                    - !Ref WebServerSecurityGroup
                 UserData: 
                     Fn::Base64: !Sub |
                         #!/bin/bash -xe
@@ -254,30 +260,11 @@ Resources:
                         systemctl enable httpd
                         cd /var/www/html
                         echo "it works! Udagram, Udacity" > index.html
-                ImageId: ami-0103f211a154d64a6
-                InstanceType: "t3.small"
                 BlockDeviceMappings:
                     - DeviceName: "/dev/sdk"
                       Ebs:
                         VolumeSize: '10'
-                SecurityGroupIds: !GetAtt WebServerSecurityGroup.GroupId
-    
 
-    ElasticLoadBalancer:
-        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-        Properties: 
-            IpAddressType: ipv4
-            Name: ElasticLoadBalancer
-            Scheme: internet-facing
-            SecurityGroups: 
-                - Ref: ELBSecurityGroup
-            Subnets: 
-                - !Ref PublicSubnet1
-                - !Ref PublicSubnet2
-            Tags: 
-                - Key: Name
-                  Value: !Sub ${EnvironmentName} elastic load balancer
-            Type: application
 
     TargetGroup:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
